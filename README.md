@@ -1,5 +1,5 @@
-![sdn-controllers-load-balancing](https://socialify.git.ci/Imperial-lord/sdn-controllers-load-balancing/image?description=1&forks=1&issues=1&language=1&logo=https%3A%2F%2Fwww.grandmetric.com%2Fwp-content%2Fuploads%2F2017%2F11%2FSDN.png&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
-This repository contains code for my B.Tech Project (IIT Guwahati) and is connected to Google Colab.
+
+![sdn-controllers-load-balancing](https://user-images.githubusercontent.com/45942031/140089516-08ea50dd-ff1e-481d-b481-6222cd9ff01b.png)
 
 ## Abstract 
 Software-Defined Network (SDN) is a networking paradigm featuring the separation of the control and data plane of the network devices. With refined centralized management and network programmability, SDN brings unique advantages as compared to traditional networks. To address the issue of scalability, the control plane is physically distributed although logically centralized. Since network traffic is both spatially and temporally dynamic, a multi-controller deployment in SDN needs a load balancing mechanism to deal with local overloads effectively.
