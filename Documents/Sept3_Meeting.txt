@@ -1,2 +1,0 @@
-hop count by finding number of intermedoiate nodes
-take sum over all switches including that switch
