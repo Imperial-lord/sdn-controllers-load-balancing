@@ -1,9 +1,12 @@
+import sys
 import networkx as nx
 import matplotlib.pyplot as plt
+from datetime import datetime
 from data import heavy_load, light_load, skewed_load, table
 from graph_building import build_graph
 from q_learning import q_learning
 from switch_migration import calculate_controller_cluster_load_ratio, calculate_discrete_coefficient
+from graph_helpers import calculate_Dij_from_states, show_all_plots
 
 # ----------------------------------------------------------------------------------------------------------------
 
@@ -11,6 +14,12 @@ from switch_migration import calculate_controller_cluster_load_ratio, calculate_
 k = int(input("Enter the number of controllers to allocate: "))
 graph = nx.read_gml('gml/Arnes.gml', label='id')
 switch_count = len(graph.nodes)
+
+# ----------------------------------------------------------------------------------------------------------------
+# log_file_name = "logs/Log_message{}.log".format(datetime.now().time())
+# log_file = open(log_file_name, "w")
+# print("Check the system logs at - " + log_file_name + "\n")
+# sys.stdout = log_file
 
 # ----------------------------------------------------------------------------------------------------------------
 
@@ -37,38 +46,25 @@ final_data_skewed = skewed_load.gen_data_csv(table_data)
 final_data = final_data_heavy
 controllers_Q, controller_sets_Q, controller_sets_G, load_array = build_graph(k, graph, final_data)
 states_list, disc_reward_list = q_learning(controller_sets_Q, controllers_Q, k, switch_count, load_array)
+d_coeff_list = calculate_Dij_from_states(k, states_list, controllers_Q, load_array)
 
-d_coeff_list = []
-for n in range(0, len(states_list)):
-    state = states_list[n]
+show_all_plots(d_coeff_list, disc_reward_list, 'Load Heavy')
 
-    controller_cluster_load = {}
-    for i in range(0, k):
-        controller_cluster_load[controllers_Q[i]] = state[i]
+# ----------------------------------------------------------------------------------------------------------------
+final_data = final_data_light
+controllers_Q, controller_sets_Q, controller_sets_G, load_array = build_graph(k, graph, final_data)
+states_list, disc_reward_list = q_learning(controller_sets_Q, controllers_Q, k, switch_count, load_array)
+d_coeff_list = calculate_Dij_from_states(k, states_list, controllers_Q, load_array)
 
-    controller_cluster_load_ratio = calculate_controller_cluster_load_ratio(controller_cluster_load, load_array)
-    Dij = calculate_discrete_coefficient(controller_cluster_load_ratio)
+show_all_plots(d_coeff_list, disc_reward_list, 'Load Light')
 
-    d_coeff_list.append(Dij)
+# ----------------------------------------------------------------------------------------------------------------
+final_data = final_data_skewed
+controllers_Q, controller_sets_Q, controller_sets_G, load_array = build_graph(k, graph, final_data)
+states_list, disc_reward_list = q_learning(controller_sets_Q, controllers_Q, k, switch_count, load_array)
+d_coeff_list = calculate_Dij_from_states(k, states_list, controllers_Q, load_array)
 
+show_all_plots(d_coeff_list, disc_reward_list, 'Load Skewed')
 
-time = []
-plot_d_coeff = []
-plot_disc_reward = []
-
-for i in range(0, 6000, 1):
-    time.append(i)
-    plot_d_coeff.append(d_coeff_list[i])
-    plot_disc_reward.append(disc_reward_list[i])
-
-# Discrete coefficient vs iterations
-plt.xlabel('Iterations')
-plt.ylabel('Discrete Coefficient')
-plt.plot(time, plot_d_coeff)
-plt.show()
-
-# Discounted reward vs iterations
-plt.xlabel('Iterations')
-plt.ylabel('Discounted Reward')
-plt.plot(time, plot_disc_reward)
-plt.show()
+# ----------------------------------------------------------------------------------------------------------------
+# sys.stdout = sys.__stdout__
