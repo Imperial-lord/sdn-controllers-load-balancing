@@ -20,7 +20,7 @@ def calculate_Dij_from_states(k, states_list, controllers_Q, load_array):
     return d_coeff_list
 
 
-def show_all_plots(d_coeff_list, disc_reward_list, plot_type):
+def show_all_plots(d_coeff_list, disc_reward_list, num_switch_exchanges_list, plot_type):
     plot_directory = 'plots/{}/'.format(plot_type)
     if not os.path.exists(plot_directory):
         os.makedirs(plot_directory)
@@ -28,11 +28,13 @@ def show_all_plots(d_coeff_list, disc_reward_list, plot_type):
     time = []
     plot_d_coeff = []
     plot_disc_reward = []
+    plot_num_switch_exchnages = []
 
-    for i in range(0, 6000, 1):
+    for i in range(0, 6000, 25):
         time.append(i)
         plot_d_coeff.append(d_coeff_list[i])
         plot_disc_reward.append(disc_reward_list[i])
+        plot_num_switch_exchnages.append(num_switch_exchanges_list[i])
 
     # Discrete coefficient vs iterations
     plt.xlabel('Iterations')
@@ -46,4 +48,11 @@ def show_all_plots(d_coeff_list, disc_reward_list, plot_type):
     plt.ylabel('Discounted Reward')
     plt.plot(time, plot_disc_reward)
     plt.savefig('plots/{}/discounted_reward.png'.format(plot_type))
+    plt.clf()
+
+    # Number of switch exchanges vs iterations
+    plt.xlabel('Iterations')
+    plt.ylabel('Number of switch exchnages')
+    plt.plot(time, plot_num_switch_exchnages)
+    plt.savefig('plots/{}/switch_exchanges.png'.format(plot_type))
     plt.clf()

@@ -68,6 +68,10 @@ def q_learning(controller_sets_Q, controllers_Q, k, switch_count, load_array):
     l_n_list = []
     cum_disc_reward = 0
 
+    # List to store number of switch exchanges
+    num_switch_exchanges = 0
+    num_switch_exchanges_list = []
+
     # Store Sn & Smax to generate the Lagrange multiplier
     S_max = 4000
     S_n = 0
@@ -131,6 +135,7 @@ def q_learning(controller_sets_Q, controllers_Q, k, switch_count, load_array):
         if action == 0:
             # Do nothing
             next_state = state
+            num_switch_exchanges_list.append(num_switch_exchanges)
 
         elif action == 1:
             # Add 1 switch to Ci
@@ -138,6 +143,8 @@ def q_learning(controller_sets_Q, controllers_Q, k, switch_count, load_array):
             # The switch should not be in the same controller as destination
 
             S_n += pow(alpha(n), n)
+            num_switch_exchanges += 1
+            num_switch_exchanges_list.append(num_switch_exchanges)
 
             controller_dest = C_i
             controller_src = controller_dest
@@ -174,6 +181,8 @@ def q_learning(controller_sets_Q, controllers_Q, k, switch_count, load_array):
             # Transfer a random switch from the source controller to this destination controller
 
             S_n += pow(alpha(n), n)
+            num_switch_exchanges += 1
+            num_switch_exchanges_list.append(num_switch_exchanges)
 
             controller_src = C_i
             controller_dest = controller_src
@@ -246,4 +255,4 @@ def q_learning(controller_sets_Q, controllers_Q, k, switch_count, load_array):
         # Update epsilon for the next iteration
         epsilon = update_epsilon(epsilon, epsilon_dec, epsilon_min)
 
-    return states_list, disc_reward_list
+    return states_list, disc_reward_list, num_switch_exchanges_list

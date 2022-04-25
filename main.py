@@ -45,26 +45,29 @@ final_data_skewed = skewed_load.gen_data_csv(table_data)
 # ----------------------------------------------------------------------------------------------------------------
 final_data = final_data_heavy
 controllers_Q, controller_sets_Q, controller_sets_G, load_array = build_graph(k, graph, final_data)
-states_list, disc_reward_list = q_learning(controller_sets_Q, controllers_Q, k, switch_count, load_array)
+states_list, disc_reward_list, num_switch_exchanges_list = q_learning(
+    controller_sets_Q, controllers_Q, k, switch_count, load_array)
 d_coeff_list = calculate_Dij_from_states(k, states_list, controllers_Q, load_array)
 
-show_all_plots(d_coeff_list, disc_reward_list, 'Load Heavy')
+show_all_plots(d_coeff_list, disc_reward_list, num_switch_exchanges_list, 'Load Heavy')
 
 # ----------------------------------------------------------------------------------------------------------------
 final_data = final_data_light
 controllers_Q, controller_sets_Q, controller_sets_G, load_array = build_graph(k, graph, final_data)
-states_list, disc_reward_list = q_learning(controller_sets_Q, controllers_Q, k, switch_count, load_array)
+states_list, disc_reward_list, num_switch_exchanges_list = q_learning(
+    controller_sets_Q, controllers_Q, k, switch_count, load_array)
 d_coeff_list = calculate_Dij_from_states(k, states_list, controllers_Q, load_array)
 
-show_all_plots(d_coeff_list, disc_reward_list, 'Load Light')
+show_all_plots(d_coeff_list, disc_reward_list, num_switch_exchanges_list, 'Load Light')
 
 # ----------------------------------------------------------------------------------------------------------------
 final_data = final_data_skewed
 controllers_Q, controller_sets_Q, controller_sets_G, load_array = build_graph(k, graph, final_data)
-states_list, disc_reward_list = q_learning(controller_sets_Q, controllers_Q, k, switch_count, load_array)
+states_list, disc_reward_list, num_switch_exchanges_list = q_learning(
+    controller_sets_Q, controllers_Q, k, switch_count, load_array)
 d_coeff_list = calculate_Dij_from_states(k, states_list, controllers_Q, load_array)
 
-show_all_plots(d_coeff_list, disc_reward_list, 'Load Skewed')
+show_all_plots(d_coeff_list, disc_reward_list, num_switch_exchanges_list, 'Load Skewed')
 
 # ----------------------------------------------------------------------------------------------------------------
 # sys.stdout = sys.__stdout__
